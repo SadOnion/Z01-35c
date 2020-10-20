@@ -1,2 +1,1 @@
-@echo off
-dir "%1" /s /b /ad
+xcopy "%1" /e /t
