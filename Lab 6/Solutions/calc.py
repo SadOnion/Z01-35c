@@ -7,13 +7,6 @@ from optparse import OptionParser
 
 
 def evaluate(node):
-    """
-    Walk recursively though the mathematical expression,
-    in order to evaluate it.
-    Valid operations are listed in op_map.
-    Valid functions are listed in func_map.
-    Valid constants are listed in const_map.
-    """
 
     op_map = {
         ast.Add: operator.add,
