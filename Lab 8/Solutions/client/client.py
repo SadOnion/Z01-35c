@@ -12,13 +12,11 @@ user_ID = 0
 chat_text = ""
 
 def UpdateMessages():
-    print("prt")
     with openapi_client.ApiClient(configuration) as api_client:
         # Create an instance of the API class
         api_instance = default_api.DefaultApi(api_client)
 
         try:
-            print("upadat")
             api_response = api_instance.get_user_id_get(user_ID)
             for x in api_response["messages"]:
                 chat['text'] = chat['text'] + x
