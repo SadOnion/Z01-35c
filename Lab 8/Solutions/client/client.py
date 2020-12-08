@@ -30,7 +30,7 @@ def SendMessage():
         try:
             user_id = int(send_to.get())
             message = new_message.get("1.0",tk.END)
-            chat['text'] = chat['text'] +"You: "+message
+            chat['text'] = chat['text'] +"Your message: "+message
             api_instance.send_user_id_message_post(user_id,message)
             new_message.delete("1.0",tk.END)
 

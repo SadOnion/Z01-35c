@@ -1,0 +1,81 @@
+{
+    "openapi": "3.0.0",
+    "info":{
+        "description": "Api documentation for Lab 8",
+        "version": "1.0.0",
+        "title": "API Lab 8",
+        "contact":{
+            "email": "xd@xd.pl"
+        },
+        "license":{
+            "name": "Mit"
+        }
+    },
+      "tags": [
+        {
+          "name": "API",
+          "description": "Lab 8 API"
+        }
+      ],
+        "paths": {
+        "/get/{userId}": {
+          "parameters":[
+              {
+                  "name": "userId",
+                  "in": "path",
+                  "required": true,
+                  "description:": "user id",
+                  "type": "integer"
+              }
+          ],
+          "get": {
+            "tags": [
+              "API"
+            ],
+            "summary": "Gets messages stored on server to coresponding user",
+            "responses": {
+              "200": {
+                "description": "OK"
+              }
+            }
+            
+          }
+          
+
+        },
+        
+        "/send/{userId}/{message}": {
+            "parameters":[
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "description:": "user id",
+                    "type": "integer"
+                },
+                {
+                    "name": "message",
+                    "in": "path",
+                    "required": true,
+                    "description:": "content of the message",
+                    "type": "string"
+                }
+            ],  
+          "post": {
+            "tags": [
+              "API"
+            ],
+            "summary": "Sends message to a user ",
+            "responses": {
+              "200": {
+                "description": "OK",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+        
+    }
+}
