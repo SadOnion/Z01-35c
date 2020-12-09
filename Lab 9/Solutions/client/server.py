@@ -33,6 +33,8 @@ class ClientUpdate(Resource):
         return_data = []
         for msg in msgs:
             return_data.append(msg.msg)
+            db.session.delete(msg)
+        db.session.commit()
         print(return_data)
         return {"messages":return_data}
 
