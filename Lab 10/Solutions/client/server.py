@@ -82,8 +82,10 @@ def get_messages(fromId,toId):
     for msg in from_msgs:
         messages.append(msg.to_json())
     for msg in to_msgs:
+        msg.Displayed = True
         messages.append(msg.to_json())
     messages.sort(key=lambda x: x["SendDate"])
+    db.session.commit()
     return json.dumps(messages)
 @app.route('/read/<int:fromId>/<int:toId>')
 def read(fromId,toId):
@@ -128,19 +130,20 @@ def register_new_user(login,password):
     db.session.add(user)
     db.session.commit()
     active_users.append(user.Id)
-    update_list()
     return user.Id
 def update_list():
     socketio.emit("update_list",brodcast=True)
-def update_clients_data(clients):
-    socketio.emit("update_data",to=clients)
 @socketio.on("connect")
 def connect():
-    print("siema ",request.sid)
-@socketio.on("register")
-def register(user_id):
-    clients[user_id] = request.sid
-    update_clients_data([request.sid])
+    print(request.sid," connected")
+    update_list()
+    clients[request.sid] = active_users[len(active_users)-1]
+@socketio.on("disconnect")
+def disconnect():
+    print(request.sid," disconnected")
+    active_users.remove(clients[request.sid])
+    del clients[request.sid]
+    update_list()
 if __name__ == "__main__":
     socketio.run(app)
     #app.run(debug=True)

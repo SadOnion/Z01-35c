@@ -66,9 +66,8 @@ def MainDraw(root):
     input_field.grid(row=11,sticky="WS")
     send_button = tk.Button(root,text="Wyślij",command=lambda: send_message(input_field.get()))
     send_button.grid(row=11,sticky="S")
-    response = requests.get(f'http://localhost:5000/get_user_list/{user_ID}')
-    data = json.loads(response.text)
-    DrawUsers(data)
+    
+    DrawUsers()
 def DrawChat():
     if len(USERS) <= 0:
         text = tk.Label(root,text="Select user and start chatting")
@@ -86,7 +85,9 @@ def DrawChat():
             text = tk.Label(root,text=f'{msg["Content"]}:{msg["SendDate"]}',bg="white")
             text.grid(row=x,sticky="E")
         x = x+1
-def DrawUsers(data):
+def DrawUsers():
+    response = requests.get(f'http://localhost:5000/get_user_list/{user_ID}')
+    data = json.loads(response.text)
     UserButton.Count = 0
     USERS.clear()
     for user in data:
