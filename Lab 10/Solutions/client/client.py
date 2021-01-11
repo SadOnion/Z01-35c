@@ -49,6 +49,7 @@ def Login(login,password):
     if data["status"] == 1:
         user_ID = data["id"]
         connect_websocket()
+        root.title(log)
         MainDraw(root)
     else:
         user_ID = 0
@@ -56,6 +57,7 @@ def Login(login,password):
 def connect_websocket():
     sio.connect('http://localhost:5000')
 def Clear(root):
+    print("Updating UI")
     for widget in root.winfo_children():
         widget.destroy()
 def MainDraw(root):
@@ -90,6 +92,11 @@ def DrawUsers():
     data = json.loads(response.text)
     UserButton.Count = 0
     USERS.clear()
+    for x in data:
+        print(x)
+    data = sorted(data,key=lambda item:item["Status"],reverse=True)
+    for x in data:
+        print(x)
     for user in data:
         u = User(user["Id"],user["Name"],user["Status"],user["Unread"])
         USERS.append(u)

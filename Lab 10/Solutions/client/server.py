@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 api = Api(app)
 db = SQLAlchemy(app)
 active_users = []
+login_queue = []
 clients = {}
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'
@@ -102,13 +103,14 @@ def send_message(fromId,toId,content):
     msg = Message(From=fromId,To=toId,Content=content,Displayed=False,SendDate=datetime.datetime.now())
     db.session.add(msg)
     db.session.commit()
-    update_list()
+    update_list_for_users([fromId,toId])
     return {"status":"succes"}
 @app.route('/login/<string:login>/<string:password>')
 def login(login,password):
     user = User.query.filter_by(Login=login,Password=password).first()
     if user != None:
         active_users.append(user.Id)
+        login_queue.append(user.Id)
         return {"status":1,"id":user.Id}
     else:
         user = User.query.filter_by(Login=login).first()
@@ -116,6 +118,7 @@ def login(login,password):
             return {"status":-1,"id":-1}
         else:
             newId = register_new_user(login,password)
+            login_queue.append(newId)
             return {"status":1,"id":newId}
     update_list()
 
@@ -133,11 +136,17 @@ def register_new_user(login,password):
     return user.Id
 def update_list():
     socketio.emit("update_list",brodcast=True)
+def update_list_for_users(users):
+    for x in users:
+        print(x,clients)
+        sid = list(clients.keys())[list(clients.values()).index(x)]
+        socketio.emit("update_list",room=sid)
 @socketio.on("connect")
 def connect():
     print(request.sid," connected")
+    print(active_users)
+    clients[request.sid] = login_queue.pop(0)
     update_list()
-    clients[request.sid] = active_users[len(active_users)-1]
 @socketio.on("disconnect")
 def disconnect():
     print(request.sid," disconnected")
