@@ -84,7 +84,7 @@ def DrawChat():
             text = tk.Label(root,text=f'{msg["SendDate"]}:{msg["Content"]}',bg="grey")
             text.grid(row=x,sticky="W")
         else:
-            text = tk.Label(root,text=f'{msg["Content"]}:{msg["SendDate"]}',bg="white")
+            text = tk.Label(root,text=f'{msg["Content"]} :{msg["Displayed"]} {msg["SendDate"]}',bg="white")
             text.grid(row=x,sticky="E")
         x = x+1
 def DrawUsers():
@@ -106,12 +106,14 @@ class UserButton:
     Count = 0
     def __init__(self,name,status,unread):
         self.id = UserButton.Count
+        self.name = name
         user_button = tk.Button(root,text=f'{name} {status} {unread}',command=lambda:self.change_focus(self.id))
         user_button.grid(row=self.id,column=2,sticky="e")
         UserButton.Count=UserButton.Count+1
     def change_focus(self,focus):
         global other_user
         other_user = focus
+        root.title(f"{user_ID} chat witch user: {self.name}")
         MainDraw(root)
 def send_message(msg):
     requests.get(f'http://localhost:5000/send_message/{user_ID}/{USERS[other_user].Id}/{msg}')

@@ -80,13 +80,18 @@ def get_messages(fromId,toId):
     from_msgs = Message.query.filter_by(From=fromId,To=toId).all()
     to_msgs = Message.query.filter_by(From=toId,To=fromId).all()
     messages = []
+    notify = False
     for msg in from_msgs:
         messages.append(msg.to_json())
     for msg in to_msgs:
-        msg.Displayed = True
+        if msg.Displayed == False:
+            notify = True
+            msg.Displayed = True
         messages.append(msg.to_json())
     messages.sort(key=lambda x: x["SendDate"])
     db.session.commit()
+    if notify:
+        update_list_for_users([toId])
     return json.dumps(messages)
 @app.route('/read/<int:fromId>/<int:toId>')
 def read(fromId,toId):
@@ -139,8 +144,11 @@ def update_list():
 def update_list_for_users(users):
     for x in users:
         print(x,clients)
-        sid = list(clients.keys())[list(clients.values()).index(x)]
-        socketio.emit("update_list",room=sid)
+        try:
+            sid = list(clients.keys())[list(clients.values()).index(x)]
+            socketio.emit("update_list",room=sid)
+        except:
+            continue    
 @socketio.on("connect")
 def connect():
     print(request.sid," connected")
