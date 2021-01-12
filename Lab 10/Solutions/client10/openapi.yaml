@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  description: "Lab 8"
+  title: API Lab 8
+  version: "1.0"
+  x-description: Lab 8
+servers:
+  - url: http://localhost:5000/
+paths:
+  /get/{userId}:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: id of user
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items:
+                      type: string
+  /send/{userId}/{message}:
+    post:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Destination id
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+        - name: message
+          in: path
+          required: true
+          description: Destination id
+          schema:
+            type : string
+      responses:
+        '200':
+          description: OK
+        

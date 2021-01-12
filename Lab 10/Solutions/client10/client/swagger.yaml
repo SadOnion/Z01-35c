@@ -1,0 +1,16 @@
+summary: "send"
+description: "This"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+parameters:
+- in: "body"
+  name: "body"
+  description: "avce"
+  required: true
+  schema:
+    type: string
+responses:
+404:
+description: "Error"
